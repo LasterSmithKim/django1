@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 import datetime
-
-from .forms import LoginForm
+from .forms import LoginForm, ProfileForm
+from .models import Profile1, Dreamreal
 
 # Create your views here.
 
 
-from django.http import HttpResponse
+
 
 def hello(request):
     today = datetime.datetime.now().date()
@@ -57,3 +57,23 @@ def login(request):
     return render(request, 'loggedin.html', {"username": username,"password":password})
 
 
+def SaveProfile(request):
+    saved = False
+
+    if request.method == "POST":
+        # Get the posted form
+        MyProfileForm = ProfileForm(request.POST, request.FILES)
+
+        if MyProfileForm.is_valid():
+            profile = Profile1()
+            profile.name = MyProfileForm.cleaned_data["name"]
+            print(profile.name)
+            profile.picture = MyProfileForm.cleaned_data["picture"]
+            print(profile.picture)
+            profile.save()
+            saved = True
+            print(saved)
+        else:
+            MyProfileForm = ProfileForm()
+
+    return render(request, 'saved.html', locals())
