@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 import datetime
 from .forms import LoginForm, ProfileForm
 from .models import Profile1, Dreamreal
+from django.template import RequestContext
+from django.http import HttpResponse
+
 
 # Create your views here.
 
@@ -50,11 +53,34 @@ def login(request):
 
         if MyLoginForm.is_valid():
             username = MyLoginForm.cleaned_data['user']
-            password = MyLoginForm.cleaned_data['password']
+            request.session['username'] = username
+
+
     else:
         MyLoginForm = LoginForm()
+    response = render(request, 'loggedin.html', {"username": username})
+    #response.set_cookie('last_connection', datetime.datetime.now())
+    #response.set_cookie('username', username)
+    return response
 
-    return render(request, 'loggedin.html', {"username": username,"password":password})
+
+def formView(request):
+    #if 'username' in request.COOKIES and 'last_connection' in request.COOKIES:
+    if request.session.has_key('username'):
+        username = request.COOKIES['username']
+
+        #last_connection = request.COOKIES['last_connection']
+        #last_connection_time = datetime.datetime.strptime(last_connection[:-7],"%Y-%m-%d %H:%M:%S")
+        return render(request, 'loggedin.html', {"username": username})
+
+        #if (datetime.datetime.now() - last_connection_time).seconds < 10:
+        #    return render(request, 'loggedin.html', {"username": username})
+        #else:
+        #    return render(request, 'login.html', {})
+
+    else:
+        return render(request, 'login.html', {})
+
 
 
 def SaveProfile(request):
@@ -77,3 +103,10 @@ def SaveProfile(request):
             MyProfileForm = ProfileForm()
 
     return render(request, 'saved.html', locals())
+
+def logout(request):
+   try:
+      del request.session['username']
+   except:
+      pass
+   return HttpResponse("<strong>You are logged out.</strong>")

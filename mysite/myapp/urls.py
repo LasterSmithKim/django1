@@ -16,8 +16,10 @@ urlpatterns = [
     #通用模块 ListView导入，调用as_view方法，导入model中的类名Dreamreal，获取数据库中的object_list，传递给template渲染返回给浏览器
     url(r'^dreamreals/', ListView.as_view(model=Dreamreal, template_name = "dreamreal_list.html")),
 
-    url(r'^connection/', TemplateView.as_view(template_name='login.html')),
+    url(r'^connection/', views.formView,name='loginform'),
     url(r'^login/', views.login, name='login'),
+    url(r'^logout/', views.logout, name = 'logout'),
+
     url(r'^profile/',TemplateView.as_view(template_name = 'profile.html')),
     url(r'^saved/', views.SaveProfile, name = 'saved'),
 
