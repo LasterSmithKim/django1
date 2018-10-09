@@ -4,6 +4,7 @@ from .forms import LoginForm, ProfileForm
 from .models import Profile1, Dreamreal
 from django.template import RequestContext
 from django.http import HttpResponse
+from django.views.decorators.cache import cache_page
 
 
 # Create your views here.
@@ -24,10 +25,11 @@ def index(request):
     objects = Dreamreal.objects.all()
     return render(request, "index.html", {"name": "Tom","date":objects})
 
-
+@cache_page(60 * 15)
 def viewsArticle(request, articleId):
     return render(request,"detail.html",{"id": articleId})
 
+@cache_page(60 * 15)
 def viewsArticles(request, month, year):
     return render(request, "details.html", {"month": month,"year":year})
 
@@ -56,8 +58,8 @@ def login(request):
             request.session['username'] = username
 
 
-    else:
-        MyLoginForm = LoginForm()
+        else:
+            MyLoginForm = LoginForm()
     response = render(request, 'loggedin.html', {"username": username})
     #response.set_cookie('last_connection', datetime.datetime.now())
     #response.set_cookie('username', username)
@@ -67,7 +69,7 @@ def login(request):
 def formView(request):
     #if 'username' in request.COOKIES and 'last_connection' in request.COOKIES:
     if request.session.has_key('username'):
-        username = request.COOKIES['username']
+        username = request.session['username']
 
         #last_connection = request.COOKIES['last_connection']
         #last_connection_time = datetime.datetime.strptime(last_connection[:-7],"%Y-%m-%d %H:%M:%S")
