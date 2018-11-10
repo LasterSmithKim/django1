@@ -55,7 +55,7 @@ def login(request):
 
         if MyLoginForm.is_valid():
             username = MyLoginForm.cleaned_data['user']
-            request.session['username'] = username
+            request.session["username"] = username
 
 
         else:

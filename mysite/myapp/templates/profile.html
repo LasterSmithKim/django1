@@ -1,40 +1,56 @@
 <!DOCTYPE html>
 <html>
-   <body>
+<head>
+    <script src="http://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js"></script>
 
-      <form name = "form" enctype = "multipart/form-data"
-         action = "/saved/" method = "POST" >{% csrf_token %}
+</head>
+<body>
 
-         <div style = "max-width:470px;">
-            <center>
-               <input type = "text" style = "margin-left:20%;"
-               placeholder = "Name" name = "name" />
-            </center>
-         </div>
+<form name = "form" enctype = "multipart/form-data"
+      action = "/saved/" method = "POST" >{% csrf_token %}
 
-         <br>
+    <div style = "max-width:470px;">
+        <center>
+            <input type = "text" style = "margin-left:20%;"
+                   placeholder = "Name" name = "name" />
+        </center>
+    </div>
 
-         <div style = "max-width:470px;">
-            <center>
-               <input type = "file" style = "margin-left:20%;"
-                  placeholder = "Picture" name = "picture" />
-            </center>
-         </div>
+    <br>
 
-         <br>
+    <div style = "max-width:470px;">
+        <center>
+            <input type = "file" style = "margin-left:20%;" id="inputs"
+                   placeholder = "Picture" name = "picture" />
+        </center>
+    </div>
+    <div id="dd"></div>
 
-         <div style = "max-width:470px;">
-            <center>
+    <br>
 
-               <button style = "border:0px;background-color:#4285F4; margin-top:8%;
+    <div style = "max-width:470px;">
+        <center>
+
+            <button style = "border:0px;background-color:#4285F4; margin-top:8%;
                   height:35px; width:80%; margin-left:19%;" type = "submit" value = "Login" >
-                  <strong>Login</strong>
-               </button>
+                <strong>Login</strong>
+            </button>
 
-            </center>
-         </div>
+        </center>
+    </div>
 
-      </form>
+</form>
 
-   </body>
+
+<script>
+    $("#inputs").change(function () {
+        var fil = this.files;
+        var reader = new FileReader();
+        reader.readAsDataURL(fil[0]);
+        reader.onload = function() {
+            document.getElementById("dd").innerHTML = "<img src='"+reader.result+"'>";
+        };
+    });
+</script>
+</body>
 </html>
